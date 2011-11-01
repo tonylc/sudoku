@@ -76,10 +76,7 @@ class Sudoku
   end
 
   def validate_col_by_index(index)
-    col = []
-    (0..8).each do |i|
-      col << @board[i][index]
-    end
+    col = find_all_entries_in_col_index(index)
     raise "More than 1 number for col #{index} - #{col.inspect}" unless uniq_row?(col)
   end
 
@@ -88,10 +85,7 @@ class Sudoku
   end
 
   def get_possibles_for_col_index(index)
-    col = []
-    (0..8).each do |i|
-      col << @board[i][index]
-    end
+    col = find_all_entries_in_col_index(index)
     convert_entries_to_number(col)
   end
 
@@ -103,6 +97,14 @@ class Sudoku
   def validate_quadrant_by_index(index)
     quad = find_all_entries_in_quad_index(index)
     raise "More than 1 number for quad #{index} - #{quad.inspect}" unless uniq_row?(quad)
+  end
+
+  def find_all_entries_in_col_index(index)
+    col = []
+    (0..8).each do |i|
+      col << @board[i][index]
+    end
+    col
   end
 
   def find_all_entries_in_quad_index(index)
