@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'benchmark'
 
 describe Sudoku do
   let(:super_easy_board) {
@@ -27,6 +28,16 @@ describe Sudoku do
   it "should be able to print a board" do
     s = Sudoku.new(super_easy_board)
     s.print_board
+  end
+
+  it "should be able to solve a super easy board" do
+    Benchmark.bm do |x|
+      x.report("super_easy") do
+        s = Sudoku.new(super_easy_board)
+        s.solve!
+        s.valid_final_board?.should be_true
+      end
+    end
   end
 
   describe "#initialization" do

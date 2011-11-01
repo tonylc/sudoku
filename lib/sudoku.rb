@@ -13,6 +13,7 @@ class Sudoku
 
   def initialize(board_str)
     @board = []
+    @set = false
     create_board(board_str)
     validate_board
     set_possibles
@@ -23,7 +24,11 @@ class Sudoku
   end
 
   def solve!
-
+    @set = true
+    while(@set)
+      set_possibles
+      print_board
+    end
   end
 
   def print_board
@@ -31,6 +36,17 @@ class Sudoku
     @board.each_index do |i|
       p convert_entries_to_number(@board[i]).join(" ")
     end
+  end
+
+  def valid_final_board?
+    (0..8).each do |i|
+      if !(get_possibles_for_row_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
+         !(get_possibles_for_col_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
+         !(get_possibles_for_quadrant_index(i) - [1,2,3,4,5,6,7,8,9]).empty?
+        return false
+      end
+    end
+    return true
   end
 
   private
@@ -137,18 +153,31 @@ class Sudoku
     end
   end
 
-  def get_possibles(uniq_num)
-    [1,2,3,4,5,6,7,8,9] - uniq_num
+  def get_possibles(uniq_nums)
+    [1,2,3,4,5,6,7,8,9] - uniq_nums
   end
 
   def set_possibles
+    @set = false
     (0..8).each do |i|
       (0..8).each do |j|
+        next if @board[i][j].val != 0
         rows = get_possibles_for_row_index(i)
         cols = get_possibles_for_col_index(j)
         quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
         all_nums = [rows + cols + quads].flatten.uniq
-        @board[i][j].set_possibles(*get_possibles(all_nums))
+        # if (i == 4 && j == 3)
+        #   p "***** rows #{rows.inspect}"
+        #   p "***** cols #{cols.inspect}"
+        #   p "***** quads #{quads.inspect}"
+        #   p "***** quads #{quads.inspect}"
+        #   p "**** all is #{all_nums.inspect}"
+        # end
+        possibles = get_possibles(all_nums)
+        if possibles.size <= 1
+          @set = true
+        end
+        @board[i][j].set_possibles(*possibles)
       end
     end
   end
