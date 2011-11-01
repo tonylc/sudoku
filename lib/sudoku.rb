@@ -18,8 +18,9 @@ class Sudoku
   end
 
   def print_board
+    puts ""
     @board.each_index do |i|
-      p @board[i].join(" ")
+      p convert_entries_to_number(@board[i]).join(" ")
     end
   end
 
@@ -54,7 +55,12 @@ class Sudoku
   end
 
   def uniq_row?(row)
+    row = convert_entries_to_number(row)
     (row - [0]).size == (row - [0]).uniq.size
+  end
+
+  def convert_entries_to_number(entries)
+    entries.map {|entry| entry.val }
   end
 
   def create_board(board_str)
@@ -64,7 +70,7 @@ class Sudoku
     (0..8).each do |i|
       row = Array.new
       (0..8).each do |j|
-        row << board_array.shift.to_i
+        row << Entry.new(board_array.shift.to_i)
       end
       @board << row
     end
