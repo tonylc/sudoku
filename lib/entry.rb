@@ -4,7 +4,15 @@ class Entry
   def initialize(val)
     raise "Invalid number: #{val}" unless 0 <= val && val <= 9
     @val = val
-    set_possibles
+    init_possibles!
+  end
+
+  def set_possibles(*possibles)
+    @possibles = possibles
+  end
+
+  def remove_from_possible(*possible_val)
+    @possibles -= possible_val
   end
 
   private
@@ -14,7 +22,7 @@ class Entry
     @val = val
   end
 
-  def set_possibles
+  def init_possibles!
     if @val != 0
       @possibles = []
     else

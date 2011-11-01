@@ -25,4 +25,25 @@ describe Entry do
       entry.possibles.should == [1,2,3,4,5,6,7,8,9]
     end
   end
+
+  describe "#remove_from_possible" do
+    let(:entry) { Entry.new(0) }
+
+    it "should show the difference" do
+      entry.remove_from_possible(2)
+      entry.possibles.should == [1,3,4,5,6,7,8,9]
+
+      entry.remove_from_possible(2,4,6)
+      entry.possibles.should == [1,3,5,7,8,9]
+    end
+  end
+
+  describe "#set_possibles" do
+    let(:entry) { Entry.new(0) }
+
+    it "should set new possibles" do
+      entry.set_possibles(1,2,3)
+      entry.possibles.should == [1,2,3]
+    end
+  end
 end
