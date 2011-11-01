@@ -40,13 +40,23 @@ describe Sudoku do
     end
   end
 
+  # it "should be able to solve a medium board" do
+  #   Benchmark.bm do |x|
+  #     x.report("medium") do
+  #       s = Sudoku.new(medium_board)
+  #       s.solve!
+  #       s.valid_final_board?.should be_true
+  #     end
+  #   end
+  # end
+
   describe "#initialization" do
-    it "should set all possibles for a super easy board" do
-      s = Sudoku.new(super_easy_board)
-      s.possibles(0,0).should == [1,3]
-      s.possibles(4,3).should == [6,9]
-      s.possibles(7,6).should == [1,3]
-    end
+    # it "should set all possibles for a super easy board" do
+    #   s = Sudoku.new(medium_board)
+    #   s.possibles(0,0).should == []
+    #   s.possibles(4,3).should == [6,9]
+    #   s.possibles(7,6).should == [1,3]
+    # end
 
     it "should find quadrants by entries" do
       s = Sudoku.new(super_easy_board)
