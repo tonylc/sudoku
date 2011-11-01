@@ -8,14 +8,24 @@ class Entry
   end
 
   def set_possibles(*possibles)
+    return if @val != 0
     @possibles = possibles
+    auto_set_val!
   end
 
   def remove_from_possible(*possible_val)
+    return if @val != 0
     @possibles -= possible_val
+    auto_set_val!
   end
 
   private
+
+  def auto_set_val!
+    if @possibles.size == 1
+      @val = @possibles.first
+    end
+  end
 
   def val=(val)
     raise "Invalid number: #{val}" unless 1 <= val && val <= 9

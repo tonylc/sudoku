@@ -36,6 +36,12 @@ describe Entry do
       entry.remove_from_possible(2,4,6)
       entry.possibles.should == [1,3,5,7,8,9]
     end
+
+    it "should automatically set value if there's only one possible left" do
+      entry.remove_from_possible(1,2,3,4,6,7,8,9)
+      entry.possibles.should == [5]
+      entry.val.should == 5
+    end
   end
 
   describe "#set_possibles" do
@@ -44,6 +50,12 @@ describe Entry do
     it "should set new possibles" do
       entry.set_possibles(1,2,3)
       entry.possibles.should == [1,2,3]
+    end
+
+    it "should automatically set value if there's only one possible left" do
+      entry.set_possibles(5)
+      entry.possibles.should == [5]
+      entry.val.should == 5
     end
   end
 end
