@@ -15,6 +15,15 @@ class Sudoku
     @board = []
     create_board(board_str)
     validate_board
+    set_possibles
+  end
+
+  def possibles(row_index, col_index)
+    @board[row_index][col_index].possibles
+  end
+
+  def solve!
+
   end
 
   def print_board
@@ -25,6 +34,34 @@ class Sudoku
   end
 
   private
+
+  def find_quad_by_entry(row, col)
+    if row < 3
+      if col < 3
+        return 0
+      elsif col < 6
+        return 1
+      else
+        return 2
+      end
+    elsif row < 6
+      if col < 3
+        return 3
+      elsif col < 6
+        return 4
+      else
+        return 5
+      end
+    else
+      if col < 3
+        return 6
+      elsif col < 6
+        return 7
+      else
+        return 8
+      end
+    end
+  end
 
   def validate_board
     (0..8).each do |i|
@@ -46,12 +83,34 @@ class Sudoku
     raise "More than 1 number for col #{index} - #{col.inspect}" unless uniq_row?(col)
   end
 
+  def get_possibles_for_row_index(index)
+    convert_entries_to_number(@board[index])
+  end
+
+  def get_possibles_for_col_index(index)
+    col = []
+    (0..8).each do |i|
+      col << @board[i][index]
+    end
+    convert_entries_to_number(col)
+  end
+
+  def get_possibles_for_quadrant_index(index)
+    quad = find_all_entries_in_quad_index(index)
+    convert_entries_to_number(quad)
+  end
+
   def validate_quadrant_by_index(index)
+    quad = find_all_entries_in_quad_index(index)
+    raise "More than 1 number for quad #{index} - #{quad.inspect}" unless uniq_row?(quad)
+  end
+
+  def find_all_entries_in_quad_index(index)
     quad = []
     QUAD_INDEX_TO_SPACES[index].each do |row, col|
       quad << @board[row][col]
     end
-    raise "More than 1 number for quad #{index} - #{quad.inspect}" unless uniq_row?(quad)
+    quad
   end
 
   def uniq_row?(row)
@@ -60,7 +119,7 @@ class Sudoku
   end
 
   def convert_entries_to_number(entries)
-    entries.map {|entry| entry.val }
+    entries.map(&:val)
   end
 
   def create_board(board_str)
@@ -73,6 +132,22 @@ class Sudoku
         row << Entry.new(board_array.shift.to_i)
       end
       @board << row
+    end
+  end
+
+  def get_possibles(uniq_num)
+    [1,2,3,4,5,6,7,8,9] - uniq_num
+  end
+
+  def set_possibles
+    (0..8).each do |i|
+      (0..8).each do |j|
+        rows = get_possibles_for_row_index(i)
+        cols = get_possibles_for_col_index(j)
+        quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
+        all_nums = [rows + cols + quads].flatten.uniq
+        @board[i][j].set_possibles(*get_possibles(all_nums))
+      end
     end
   end
 end
