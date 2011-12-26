@@ -58,4 +58,68 @@ describe Entry do
       entry.val.should == 5
     end
   end
+
+  describe "printing possibles" do
+    let(:entry) { Entry.new(0) }
+
+    describe "for the top position" do
+      it "should print all possibles" do
+        entry.set_possibles(1,2,3,4,5,6,7,8,9)
+        entry.print_top_possibles.should == "123"
+      end
+
+      it "should print only some possibles" do
+        entry.set_possibles(1,3)
+        entry.print_top_possibles.should == "1 3"
+      end
+
+      it "should only print the value if its already set" do
+        Entry.new(2).print_top_possibles.should == " 2 "
+      end
+
+      it "should not print anything if the set value is not within position" do
+        Entry.new(4).print_top_possibles.should == "   "
+      end
+    end
+
+    describe "for the middle position" do
+      it "should print all possibles" do
+        entry.set_possibles(1,2,3,4,5,6,7,8,9)
+        entry.print_middle_possibles.should == "456"
+      end
+
+      it "should print only some possibles" do
+        entry.set_possibles(4,5)
+        entry.print_middle_possibles.should == "45 "
+      end
+
+      it "should only print the value if its already set" do
+        Entry.new(4).print_middle_possibles.should == "4  "
+      end
+
+      it "should not print anything if the set value is not within position" do
+        Entry.new(9).print_middle_possibles.should == "   "
+      end
+    end
+
+    describe "for the bottom position" do
+      it "should print all possibles" do
+        entry.set_possibles(7,8,9)
+        entry.print_bottom_possibles.should == "789"
+      end
+
+      it "should print only some possibles" do
+        entry.set_possibles(1,2,3,4,5,6,9)
+        entry.print_bottom_possibles.should == "  9"
+      end
+
+      it "should only print the value if its already set" do
+        Entry.new(9).print_bottom_possibles.should == "  9"
+      end
+
+      it "should not print anything if the set value is not within position" do
+        Entry.new(1).print_bottom_possibles.should == "   "
+      end
+    end
+  end
 end

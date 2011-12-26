@@ -19,11 +19,65 @@ class Entry
     auto_set_val!
   end
 
+  def print_top_possibles
+    return print_val_in_top_position if @val != 0
+    str = ""
+    str << (@possibles.include?(1) ? "1" : " ")
+    str << (@possibles.include?(2) ? "2" : " ")
+    str << (@possibles.include?(3) ? "3" : " ")
+    str
+  end
+
+  def print_middle_possibles
+    return print_val_in_middle_position if @val != 0
+    str = ""
+    str << (@possibles.include?(4) ? "4" : " ")
+    str << (@possibles.include?(5) ? "5" : " ")
+    str << (@possibles.include?(6) ? "6" : " ")
+    str
+  end
+
+  def print_bottom_possibles
+    return print_val_in_bottom_position if @val != 0
+    str = ""
+    str << (@possibles.include?(7) ? "7" : " ")
+    str << (@possibles.include?(8) ? "8" : " ")
+    str << (@possibles.include?(9) ? "9" : " ")
+    str
+  end
+
   private
 
   def auto_set_val!
     if @possibles.size == 1
       @val = @possibles.first
+    end
+  end
+
+  def print_val_in_top_position
+    case @val
+      when 1 then "1  "
+      when 2 then " 2 "
+      when 3 then "  3"
+      else "   "
+    end
+  end
+
+  def print_val_in_middle_position
+    case @val
+      when 4 then "4  "
+      when 5 then " 5 "
+      when 6 then "  6"
+      else "   "
+    end
+  end
+
+  def print_val_in_bottom_position
+    case @val
+      when 7 then "7  "
+      when 8 then " 8 "
+      when 9 then "  9"
+      else "   "
     end
   end
 
