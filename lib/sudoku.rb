@@ -11,20 +11,26 @@ class Sudoku
     8 => [[6,6],[6,7],[6,8],[7,6],[7,7],[7,8],[8,6],[8,7],[8,8]]
   }
 
-  def initialize(board_str, debug=false)
+  def initialize(board_str=nil, debug=false)
     @board = []
     @set = false
     @debug = debug
-    create_board(board_str)
-    validate_board
-    go_through_board1
+    if board_str
+      initialize_board(board_str)
+    end
   end
 
   def possibles(row_index, col_index)
     @board[row_index][col_index].possibles
   end
 
+  def set_board(board_str)
+    raise "Board already set!" unless @board.empty?
+    initialize_board(board_str)
+  end
+
   def solve!
+    raise "Board not set" if @board.empty?
     @set = true
     @counter = 1
     while(@set)
@@ -61,6 +67,12 @@ class Sudoku
   end
 
   private
+
+  def initialize_board(board_str)
+    create_board(board_str)
+    validate_board
+    go_through_board1
+  end
 
   def find_quad_by_entry(row, col)
     if row < 3

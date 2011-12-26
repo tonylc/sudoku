@@ -160,5 +160,17 @@ describe Sudoku do
         end.should raise_error
       end
     end
+
+    describe "#set_board" do
+      it "should set the board" do
+        s = Sudoku.new
+        lambda { s.set_board(super_easy_board) }.should_not raise_error
+      end
+
+      it "should raise error if trying to set a board that's already been initialized" do
+        s = Sudoku.new(super_easy_board)
+        lambda { s.set_board(super_easy_board) }.should raise_error
+      end
+    end
   end
 end
