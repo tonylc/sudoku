@@ -25,16 +25,27 @@ describe Sudoku do
      0,0,7,0,5,8,0,3,0"
   }
   let(:medium_board) {
-    "4,3,0,0,9,0,0,6,2,
-     0,0,8,0,0,0,3,0,0,
-     0,0,0,4,0,1,0,0,0,
-     6,2,0,0,0,0,0,9,8,
-     0,0,0,3,0,2,0,0,0,
-     1,8,0,0,0,0,0,3,5,
-     0,0,0,5,0,7,0,0,0,
-     0,0,2,0,0,0,4,0,0,
-     5,4,0,0,6,0,0,7,1"
+    "0,4,0,8,0,6,0,0,0,
+     0,0,0,5,0,0,0,0,1,
+     8,5,9,0,0,0,0,4,6,
+     0,3,0,7,0,5,0,0,2,
+     4,0,5,0,0,0,3,0,8,
+     2,0,0,9,0,4,0,1,0,
+     5,2,0,0,0,0,1,3,9,
+     9,0,0,0,0,1,0,0,0,
+     0,0,0,6,0,9,0,2,0"
   }
+  # let(:medium_board) {
+  #   "4,3,0,0,9,0,0,6,2,
+  #    0,0,8,0,0,0,3,0,0,
+  #    0,0,0,4,0,1,0,0,0,
+  #    6,2,0,0,0,0,0,9,8,
+  #    0,0,0,3,0,2,0,0,0,
+  #    1,8,0,0,0,0,0,3,5,
+  #    0,0,0,5,0,7,0,0,0,
+  #    0,0,2,0,0,0,4,0,0,
+  #    5,4,0,0,6,0,0,7,1"
+  # }
 
   it "should be able to print a board" do
     s = Sudoku.new(super_easy_board)
@@ -59,6 +70,16 @@ describe Sudoku do
       s.valid_final_board?.should be_true
     end
     p "**** Time it took to solve easy board: #{time}, #{counter} iterations"
+  end
+
+  it "should be able to solve a medium board" do
+    counter = 0
+    time = Benchmark.realtime do
+      s = Sudoku.new(medium_board)
+      counter = s.solve!
+      s.valid_final_board?.should be_true
+    end
+    p "**** Time it took to solve medium board: #{time}, #{counter} iterations"
   end
 
   describe "#initialization" do
