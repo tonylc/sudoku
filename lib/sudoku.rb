@@ -11,9 +11,10 @@ class Sudoku
     8 => [[6,6],[6,7],[6,8],[7,6],[7,7],[7,8],[8,6],[8,7],[8,8]]
   }
 
-  def initialize(board_str)
+  def initialize(board_str, debug=false)
     @board = []
     @set = false
+    @debug = debug
     create_board(board_str)
     validate_board
     set_possibles
@@ -28,7 +29,7 @@ class Sudoku
     @counter = 1
     while(@set)
       set_possibles
-      print_board
+      print_board if @debug
       @counter += 1
     end
     @counter
