@@ -35,6 +35,17 @@ describe Sudoku do
      9,0,0,0,0,1,0,0,0,
      0,0,0,6,0,9,0,2,0"
   }
+  let(:hard_board) {
+    "0,8,0,0,5,0,0,2,0,
+     5,0,0,0,0,1,0,0,4,
+     0,1,0,0,0,9,3,0,0,
+     0,5,3,0,0,0,0,1,0,
+     2,0,0,0,3,0,0,0,6,
+     0,9,0,0,0,0,7,5,0,
+     0,0,8,5,0,0,0,3,0,
+     9,0,0,4,0,0,0,0,7,
+     0,3,0,0,7,0,0,9,0"
+  }
   # let(:medium_board) {
   #   "4,3,0,0,9,0,0,6,2,
   #    0,0,8,0,0,0,3,0,0,
@@ -85,6 +96,16 @@ describe Sudoku do
       s.valid_final_board?.should be_true
     end
     p "**** Time it took to solve medium board: #{time}, #{counter} iterations"
+  end
+
+  it "should be able to solve a hard board" do
+    counter = 0
+    time = Benchmark.realtime do
+      s = Sudoku.new(hard_board, true)
+      counter = s.solve!
+      s.valid_final_board?.should be_true
+    end
+    p "**** Time it took to solve hard board: #{time}, #{counter} iterations"
   end
 
   describe "#initialization" do
