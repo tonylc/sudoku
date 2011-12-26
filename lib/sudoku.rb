@@ -252,7 +252,10 @@ class Sudoku
     if possibles.size <= 1
       @set = true
     end
-    @board[i][j].set_possibles(*possibles)
+    if !(@board[i][j].possibles - possibles).empty?
+      @set = true
+      @board[i][j].set_possibles(*possibles)
+    end
   end
 
   # find hidden single
