@@ -193,7 +193,7 @@ class Sudoku
     [1,2,3,4,5,6,7,8,9] - uniq_nums
   end
 
-  def is_there_uniq?(all_possibles)
+  def hidden_single?(all_possibles)
     hash = {}
     all_possibles.each do |val|
       if hash[val]
@@ -250,8 +250,7 @@ class Sudoku
     rows = get_possibles_for_row_index(i)
     cols = get_possibles_for_col_index(j)
     quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
-    all_possibles = [rows + cols + quads].flatten
-    uniq = is_there_uniq?(all_possibles)
+    uniq = hidden_single?(rows) or hidden_single?(cols) or hidden_single?(quads)
     # if i == 1 && j == 0
     # p "|||||***** rows #{rows.inspect}"
     # p "|||||***** cols #{cols.inspect}"
