@@ -17,7 +17,7 @@ class Sudoku
     @debug = debug
     create_board(board_str)
     validate_board
-    set_possibles
+    go_through_board1
   end
 
   def possibles(row_index, col_index)
@@ -28,8 +28,8 @@ class Sudoku
     @set = true
     @counter = 1
     while(@set)
-      set_possibles
-      print_board if @debug
+      go_through_board2
+      print_board_with_possibles if @debug
       @counter += 1
     end
     @counter
@@ -51,9 +51,9 @@ class Sudoku
 
   def valid_final_board?
     (0..8).each do |i|
-      if !(get_possibles_for_row_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
-         !(get_possibles_for_col_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
-         !(get_possibles_for_quadrant_index(i) - [1,2,3,4,5,6,7,8,9]).empty?
+      if !(get_vals_for_row_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
+         !(get_vals_for_col_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
+         !(get_vals_for_quadrant_index(i) - [1,2,3,4,5,6,7,8,9]).empty?
         return false
       end
     end
@@ -107,18 +107,32 @@ class Sudoku
     raise "More than 1 number for col #{index} - #{col.inspect}" unless uniq_row?(col)
   end
 
-  def get_possibles_for_row_index(index)
+  def get_vals_for_row_index(index)
     convert_entries_to_number(@board[index])
   end
 
-  def get_possibles_for_col_index(index)
+  def get_vals_for_col_index(index)
     col = find_all_entries_in_col_index(index)
     convert_entries_to_number(col)
   end
 
-  def get_possibles_for_quadrant_index(index)
+  def get_vals_for_quadrant_index(index)
     quad = find_all_entries_in_quad_index(index)
     convert_entries_to_number(quad)
+  end
+
+  def get_possibles_for_row_index(index)
+    convert_entries_to_possibles(@board[index])
+  end
+
+  def get_possibles_for_col_index(index)
+    col = find_all_entries_in_col_index(index)
+    convert_entries_to_possibles(col)
+  end
+
+  def get_possibles_for_quadrant_index(index)
+    quad = find_all_entries_in_quad_index(index)
+    convert_entries_to_possibles(quad)
   end
 
   def validate_quadrant_by_index(index)
@@ -151,6 +165,10 @@ class Sudoku
     entries.map(&:val)
   end
 
+  def convert_entries_to_possibles(entries)
+    entries.map(&:possibles)
+  end
+
   def print_row_with_possibles(row)
     p row.map(&:print_top_possibles).join("|")
     p row.map(&:print_middle_possibles).join("|")
@@ -175,28 +193,75 @@ class Sudoku
     [1,2,3,4,5,6,7,8,9] - uniq_nums
   end
 
-  def set_possibles
+  def is_there_uniq?(all_possibles)
+    hash = {}
+    all_possibles.each do |val|
+      if hash[val]
+        hash[val] += 1
+      else
+        hash[val] = 1
+      end
+    end
+    hash.invert[1]
+  end
+
+  def go_through_board1
     @set = false
     (0..8).each do |i|
       (0..8).each do |j|
-        next if @board[i][j].val != 0
-        rows = get_possibles_for_row_index(i)
-        cols = get_possibles_for_col_index(j)
-        quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
-        all_nums = [rows + cols + quads].flatten.uniq
-        # if (i == 4 && j == 3)
-        #   p "***** rows #{rows.inspect}"
-        #   p "***** cols #{cols.inspect}"
-        #   p "***** quads #{quads.inspect}"
-        #   p "***** quads #{quads.inspect}"
-        #   p "**** all is #{all_nums.inspect}"
-        # end
-        possibles = get_possibles(all_nums)
-        if possibles.size <= 1
-          @set = true
-        end
-        @board[i][j].set_possibles(*possibles)
+        set_possibles(i,j)
       end
+    end
+  end
+
+  def go_through_board2
+    @set = false
+    (0..8).each do |i|
+      (0..8).each do |j|
+        set_possibles(i,j)
+        set_based_on_hidden_single(i,j)
+      end
+    end
+  end
+
+  def set_possibles(i,j)
+    return if @board[i][j].val != 0
+    rows = get_vals_for_row_index(i)
+    cols = get_vals_for_col_index(j)
+    quads = get_vals_for_quadrant_index(find_quad_by_entry(i,j))
+    all_nums = [rows + cols + quads].flatten.uniq
+    # if i == 1 && j == 0
+    # p "***** rows #{rows.inspect}"
+    # p "***** cols #{cols.inspect}"
+    # p "***** quads #{quads.inspect}"
+    # p "**** all is #{all_nums.inspect}"
+    # end
+    possibles = get_possibles(all_nums)
+    if possibles.size <= 1
+      @set = true
+    end
+    @board[i][j].set_possibles(*possibles)
+  end
+
+  # find hidden single
+  # http://www.angusj.com/sudoku/hints.php
+  def set_based_on_hidden_single(i,j)
+    return if @board[i][j].val != 0
+    rows = get_possibles_for_row_index(i)
+    cols = get_possibles_for_col_index(j)
+    quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
+    all_possibles = [rows + cols + quads].flatten
+    uniq = is_there_uniq?(all_possibles)
+    # if i == 1 && j == 0
+    # p "|||||***** rows #{rows.inspect}"
+    # p "|||||***** cols #{cols.inspect}"
+    # p "|||||***** quads #{quads.inspect}"
+    # p "|||||**** all is #{all_possibles.inspect}"
+    # p "***** uniq is #{uniq} with entry possibles #{@board[i][j].possibles}"
+    # end
+    if uniq && !([uniq] & @board[i][j].possibles).empty?
+      @set = true
+      @board[i][j].set_possibles(uniq)
     end
   end
 end
