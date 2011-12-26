@@ -25,10 +25,13 @@ class Sudoku
 
   def solve!
     @set = true
+    @counter = 1
     while(@set)
       set_possibles
       print_board
+      @counter += 1
     end
+    @counter
   end
 
   def print_board
