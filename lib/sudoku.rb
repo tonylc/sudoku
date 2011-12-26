@@ -42,6 +42,13 @@ class Sudoku
     end
   end
 
+  def print_board_with_possibles
+    puts ""
+    @board.each_index do |i|
+      print_row_with_possibles(@board[i])
+    end
+  end
+
   def valid_final_board?
     (0..8).each do |i|
       if !(get_possibles_for_row_index(i) - [1,2,3,4,5,6,7,8,9]).empty? ||
@@ -142,6 +149,13 @@ class Sudoku
 
   def convert_entries_to_number(entries)
     entries.map(&:val)
+  end
+
+  def print_row_with_possibles(row)
+    p row.map(&:print_top_possibles).join("|")
+    p row.map(&:print_middle_possibles).join("|")
+    p row.map(&:print_bottom_possibles).join("|")
+    p "---|---|---|---|---|---|---|---|---"
   end
 
   def create_board(board_str)

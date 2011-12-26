@@ -52,6 +52,11 @@ describe Sudoku do
     s.print_board
   end
 
+  it "should be able to print a board with its possibles" do
+    s = Sudoku.new(super_easy_board)
+    s.print_board_with_possibles
+  end
+
   it "should be able to solve a super easy board" do
     counter = 0
     time = Benchmark.realtime do
