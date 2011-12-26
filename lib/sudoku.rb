@@ -262,7 +262,7 @@ class Sudoku
     rows = get_possibles_for_row_index(i)
     cols = get_possibles_for_col_index(j)
     quads = get_possibles_for_quadrant_index(find_quad_by_entry(i,j))
-    uniq = hidden_single?(rows) or hidden_single?(cols) or hidden_single?(quads)
+    uniq = hidden_single?(rows.flatten) or hidden_single?(cols.flatten) or hidden_single?(quads.flatten)
     # if i == 1 && j == 0
     # p "|||||***** rows #{rows.inspect}"
     # p "|||||***** cols #{cols.inspect}"

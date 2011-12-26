@@ -172,5 +172,9 @@ describe Sudoku do
         lambda { s.set_board(super_easy_board) }.should raise_error
       end
     end
+
+    describe "#hidden_single?" do
+      Sudoku.new.send(:hidden_single?, [3,4,5,1,2,4,3,1,4,2]).should == 5
+    end
   end
 end
